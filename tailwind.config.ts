@@ -2,7 +2,12 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -57,6 +62,29 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Custom storybook colors
+        parchment: {
+          DEFAULT: "hsl(var(--parchment))",
+          dark: "hsl(var(--parchment-dark))",
+        },
+        wood: {
+          DEFAULT: "hsl(var(--wood))",
+          dark: "hsl(var(--wood-dark))",
+        },
+        crimson: {
+          DEFAULT: "hsl(var(--crimson))",
+          light: "hsl(var(--crimson-light))",
+        },
+        gold: {
+          DEFAULT: "hsl(var(--gold))",
+          light: "hsl(var(--gold-light))",
+        },
+        holly: "hsl(var(--holly))",
+        frost: "hsl(var(--frost))",
+      },
+      fontFamily: {
+        display: ["Cinzel", "serif"],
+        body: ["Libre Baskerville", "serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -65,25 +93,60 @@ export default {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+        "page-flip": {
+          "0%": { 
+            transform: "perspective(1200px) rotateY(0deg)",
+            transformOrigin: "left center",
           },
-          to: {
-            height: "0",
+          "100%": { 
+            transform: "perspective(1200px) rotateY(-90deg)",
+            transformOrigin: "left center",
+          },
+        },
+        "page-flip-in": {
+          "0%": { 
+            transform: "perspective(1200px) rotateY(90deg)",
+            transformOrigin: "left center",
+            opacity: "0",
+          },
+          "100%": { 
+            transform: "perspective(1200px) rotateY(0deg)",
+            transformOrigin: "left center",
+            opacity: "1",
+          },
+        },
+        "fade-in": {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "scale-in": {
+          "0%": { transform: "scale(0.95)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        "pulse-glow": {
+          "0%, 100%": { 
+            boxShadow: "0 0 20px hsl(45 85% 50% / 0.4)",
+          },
+          "50%": { 
+            boxShadow: "0 0 40px hsl(45 85% 50% / 0.6)",
           },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "page-flip": "page-flip 0.4s ease-in-out forwards",
+        "page-flip-in": "page-flip-in 0.4s ease-out forwards",
+        "fade-in": "fade-in 0.5s ease-out forwards",
+        "scale-in": "scale-in 0.3s ease-out forwards",
+        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
       },
     },
   },
