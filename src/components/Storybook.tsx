@@ -1,60 +1,21 @@
-import { useState, useCallback } from "react";
-import { Chapter, initialChapter, generateNextChapter } from "@/data/story";
+import { useStoryGeneration } from "@/hooks/useStoryGeneration";
 import { BookSpine } from "./BookSpine";
 import { StoryPage } from "./StoryPage";
 import { IllustrationPlaceholder } from "./IllustrationPlaceholder";
 import { StoryInput } from "./StoryInput";
 
 export function Storybook() {
-  const [chapters, setChapters] = useState<Chapter[]>([initialChapter]);
-  const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const currentChapter = chapters[currentChapterIndex];
-
-  const handleSubmit = useCallback(
-    async (userInput: string) => {
-      setIsLoading(true);
-      setIsAnimating(true);
-
-      // Simulate AI processing delay
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      const newChapter = generateNextChapter(userInput, chapters.length + 1);
-      setChapters((prev) => [...prev, newChapter]);
-      setCurrentChapterIndex(chapters.length);
-
-      setIsLoading(false);
-      setTimeout(() => setIsAnimating(false), 500);
-    },
-    [chapters.length]
-  );
-
-  const handleReset = useCallback(() => {
-    setIsAnimating(true);
-    setTimeout(() => {
-      setChapters([initialChapter]);
-      setCurrentChapterIndex(0);
-      setIsAnimating(false);
-    }, 300);
-  }, []);
-
-  const handlePrevious = () => {
-    if (currentChapterIndex > 0) {
-      setIsAnimating(true);
-      setCurrentChapterIndex((prev) => prev - 1);
-      setTimeout(() => setIsAnimating(false), 500);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentChapterIndex < chapters.length - 1) {
-      setIsAnimating(true);
-      setCurrentChapterIndex((prev) => prev + 1);
-      setTimeout(() => setIsAnimating(false), 500);
-    }
-  };
+  const {
+    chapters,
+    currentChapter,
+    currentChapterIndex,
+    isLoading,
+    isAnimating,
+    generateNextChapter,
+    resetStory,
+    goToPreviousChapter,
+    goToNextChapter,
+  } = useStoryGeneration();
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
@@ -86,7 +47,7 @@ export function Storybook() {
           {chapters.length > 1 && (
             <div className="flex items-center justify-center gap-4 mt-4 pt-4 border-t border-gold/20">
               <button
-                onClick={handlePrevious}
+                onClick={goToPreviousChapter}
                 disabled={currentChapterIndex === 0}
                 className="px-4 py-2 font-display text-sm text-foreground bg-wood-dark/50 rounded hover:bg-wood-dark transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
@@ -96,7 +57,7 @@ export function Storybook() {
                 {currentChapterIndex + 1} of {chapters.length}
               </span>
               <button
-                onClick={handleNext}
+                onClick={goToNextChapter}
                 disabled={currentChapterIndex === chapters.length - 1}
                 className="px-4 py-2 font-display text-sm text-foreground bg-wood-dark/50 rounded hover:bg-wood-dark transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
@@ -110,8 +71,8 @@ export function Storybook() {
       {/* Story input */}
       <div className="mt-6 parchment-texture rounded-lg p-4 md:p-6 shadow-lg border border-gold/30">
         <StoryInput
-          onSubmit={handleSubmit}
-          onReset={handleReset}
+          onSubmit={generateNextChapter}
+          onReset={resetStory}
           isLoading={isLoading}
         />
       </div>
