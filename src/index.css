@@ -206,6 +206,92 @@
     }
   }
 
+  /* Page flip animations */
+  @keyframes flip-out-forward {
+    0% {
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+    50% {
+      transform: rotateY(-15deg);
+      opacity: 0.7;
+    }
+    100% {
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+  }
+
+  @keyframes flip-out-backward {
+    0% {
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+    50% {
+      transform: rotateY(15deg);
+      opacity: 0.7;
+    }
+    100% {
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+  }
+
+  @keyframes flip-in-forward {
+    0% {
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+    50% {
+      transform: rotateY(15deg);
+      opacity: 0.7;
+    }
+    100% {
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+  }
+
+  @keyframes flip-in-backward {
+    0% {
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+    50% {
+      transform: rotateY(-15deg);
+      opacity: 0.7;
+    }
+    100% {
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+  }
+
+  .page-flip-out-forward {
+    animation: flip-out-forward 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    transform-origin: right center;
+  }
+
+  .page-flip-out-backward {
+    animation: flip-out-backward 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    transform-origin: left center;
+  }
+
+  .page-flip-in-forward {
+    animation: flip-in-forward 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    transform-origin: left center;
+  }
+
+  .page-flip-in-backward {
+    animation: flip-in-backward 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    transform-origin: right center;
+  }
+
+  .page-flip-reset {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+
   .animate-page-turn {
     animation: page-turn 0.6s ease-in-out forwards;
   }

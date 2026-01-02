@@ -3,11 +3,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Chapter, initialChapter, getChapterTitle } from "@/data/story";
 
+export type FlipDirection = "forward" | "backward" | null;
+
 export function useStoryGeneration() {
   const [chapters, setChapters] = useState<Chapter[]>([initialChapter]);
   const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [flipDirection, setFlipDirection] = useState<FlipDirection>(null);
 
   const currentChapter = chapters[currentChapterIndex];
 
@@ -20,6 +23,7 @@ export function useStoryGeneration() {
     async (userChoice: string) => {
       setIsLoading(true);
       setIsAnimating(true);
+      setFlipDirection("forward");
 
       try {
         const newChapterNumber = chapters.length + 1;
@@ -73,7 +77,10 @@ export function useStoryGeneration() {
         }
       } finally {
         setIsLoading(false);
-        setTimeout(() => setIsAnimating(false), 500);
+        setTimeout(() => {
+          setIsAnimating(false);
+          setFlipDirection(null);
+        }, 600);
       }
     },
     [chapters, getStoryContext]
@@ -81,29 +88,43 @@ export function useStoryGeneration() {
 
   const resetStory = useCallback(() => {
     setIsAnimating(true);
+    setFlipDirection("backward");
     setTimeout(() => {
       setChapters([initialChapter]);
       setCurrentChapterIndex(0);
       setIsAnimating(false);
+      setFlipDirection(null);
       toast.success("The story begins anew", {
         description: "Turn to page one and start your adventure!",
       });
-    }, 300);
+    }, 600);
   }, []);
 
   const goToPreviousChapter = useCallback(() => {
     if (currentChapterIndex > 0) {
       setIsAnimating(true);
-      setCurrentChapterIndex((prev) => prev - 1);
-      setTimeout(() => setIsAnimating(false), 500);
+      setFlipDirection("backward");
+      setTimeout(() => {
+        setCurrentChapterIndex((prev) => prev - 1);
+      }, 300);
+      setTimeout(() => {
+        setIsAnimating(false);
+        setFlipDirection(null);
+      }, 600);
     }
   }, [currentChapterIndex]);
 
   const goToNextChapter = useCallback(() => {
     if (currentChapterIndex < chapters.length - 1) {
       setIsAnimating(true);
-      setCurrentChapterIndex((prev) => prev + 1);
-      setTimeout(() => setIsAnimating(false), 500);
+      setFlipDirection("forward");
+      setTimeout(() => {
+        setCurrentChapterIndex((prev) => prev + 1);
+      }, 300);
+      setTimeout(() => {
+        setIsAnimating(false);
+        setFlipDirection(null);
+      }, 600);
     }
   }, [currentChapterIndex, chapters.length]);
 
@@ -113,6 +134,7 @@ export function useStoryGeneration() {
     currentChapterIndex,
     isLoading,
     isAnimating,
+    flipDirection,
     generateNextChapter,
     resetStory,
     goToPreviousChapter,
